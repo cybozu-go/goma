@@ -44,22 +44,22 @@ func (f *filter) String() string {
 func construct(params map[string]interface{}) (filters.Filter, error) {
 	var init float64
 	if v, ok := params["init"]; ok {
-		if f, ok := v.(float64); !ok {
-			return nil, fmt.Errorf("init is not a float: %v", v)
-		} else {
+		if f, ok := v.(float64); ok {
 			init = f
+		} else {
+			return nil, fmt.Errorf("init is not a float: %v", v)
 		}
 	}
 
-	var window int = defaultWindowSize
+	var window = defaultWindowSize
 	if v, ok := params["window"]; ok {
-		if i, ok := v.(int); !ok {
-			return nil, fmt.Errorf("window is not an integer: %v", v)
-		} else {
+		if i, ok := v.(int); ok {
 			if i < 1 {
 				return nil, fmt.Errorf("too small window size: %d", i)
 			}
 			window = i
+		} else {
+			return nil, fmt.Errorf("window is not an integer: %v", v)
 		}
 	}
 

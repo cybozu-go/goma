@@ -62,7 +62,6 @@ func TestSample(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(string(data))
 	var jm1 MonitorDefinition
 	err = json.Unmarshal(data, &jm1)
 	if err != nil {

@@ -11,10 +11,6 @@ import (
 	"github.com/cybozu-go/goma"
 )
 
-const (
-	GOMA_VALUE = "GOMA_VALUE"
-)
-
 func TestConstructBasic(t *testing.T) {
 	t.Parallel()
 	if _, err := construct(nil); err != goma.ErrNoKey {

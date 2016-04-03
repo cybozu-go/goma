@@ -16,6 +16,7 @@ const (
 	defaultTimeout  = 59 * time.Second
 )
 
+// Errors for goma.
 var (
 	ErrBadName      = errors.New("bad monitor name")
 	ErrNoType       = errors.New("no type")

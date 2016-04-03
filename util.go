@@ -3,6 +3,7 @@
 package goma
 
 const (
+	// EPSILON is permitted error for float comparison.
 	EPSILON = 0.00000001
 )
 
@@ -28,7 +29,7 @@ func GetBool(key string, m map[string]interface{}) (bool, error) {
 	return b, nil
 }
 
-// GeInt extracts an integer from TOML decoded map.
+// GetInt extracts an integer from TOML decoded map.
 // If m[key] does not exist or is not an integer, non-nil error is returned.
 func GetInt(key string, m map[string]interface{}) (int, error) {
 	v, ok := m[key]

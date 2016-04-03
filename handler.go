@@ -44,6 +44,7 @@ func handleVerbosity(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// NewRouter creates gorilla/mux *Router for REST API.
 func NewRouter(ctx context.Context) *mux.Router {
 	r := mux.NewRouter()
 	r.Path("/list").

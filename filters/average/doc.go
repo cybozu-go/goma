@@ -1,5 +1,5 @@
 /*
-Package average implements a moving-average filter.
+Package average implements moving-average filter type.
 
 The constructor takes these parameters:
 
