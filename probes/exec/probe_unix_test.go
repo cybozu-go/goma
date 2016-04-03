@@ -4,6 +4,7 @@ package exec
 
 import (
 	"testing"
+	"time"
 
 	"golang.org/x/net/context"
 
@@ -122,5 +123,26 @@ func TestProbeEnv(t *testing.T) {
 	}
 	if !goma.FloatEquals(f, 123.45) {
 		t.Error(`!goma.FloatEquals(f, 123.45)`)
+	}
+}
+
+func TestProbeTimeout(t *testing.T) {
+	t.Parallel()
+
+	p, err := construct(map[string]interface{}{
+		"command": "sleep",
+		"args":    []interface{}{"10"},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	ctx, _ := context.WithTimeout(context.Background(), 1*time.Second)
+	f, err := p.Probe(ctx)
+	if err != context.DeadlineExceeded {
+		t.Error(`err != context.DeadlineExceeded`)
+	}
+	if !goma.FloatEquals(f, 1.0) {
+		t.Error(`!goma.FloatEquals(f, 1.0)`)
 	}
 }

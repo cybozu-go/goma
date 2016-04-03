@@ -96,3 +96,30 @@ func GetStringList(key string, m map[string]interface{}) ([]string, error) {
 	}
 	return ret, nil
 }
+
+// GetStringMap constructs a map[string]string from TOML decoded map.
+// If m[key] does not exist or is not a string map, non-nil error is returned.
+func GetStringMap(key string, m map[string]interface{}) (map[string]string, error) {
+	v, ok := m[key]
+	if !ok {
+		return nil, ErrNoKey
+	}
+
+	if sm, ok := v.(map[string]string); ok {
+		return sm, nil
+	}
+
+	m2, ok := v.(map[string]interface{})
+	if !ok {
+		return nil, ErrInvalidType
+	}
+	ret := make(map[string]string)
+	for k, v2 := range m2 {
+		s, ok := v2.(string)
+		if !ok {
+			return nil, ErrInvalidType
+		}
+		ret[k] = s
+	}
+	return ret, nil
+}

@@ -13,10 +13,6 @@ import (
 	"golang.org/x/net/context"
 )
 
-const (
-	defaultErrValue float64 = 0
-)
-
 type probe struct {
 	command string
 	args    []string
@@ -111,11 +107,7 @@ func construct(params map[string]interface{}) (probes.Prober, error) {
 		return nil, err
 	}
 	errval, err := goma.GetFloat("errval", params)
-	switch err {
-	case goma.ErrNoKey:
-		errval = defaultErrValue
-	case nil:
-	default:
+	if err != nil && err != goma.ErrNoKey {
 		return nil, err
 	}
 	env, err := goma.GetStringList("env", params)
