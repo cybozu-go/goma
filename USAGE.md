@@ -85,14 +85,14 @@ max = 0.3
 
   [monitor.probe]
   type = "exec",
-  command = ["/some/probe/cmd"]
+  command = "/some/probe/cmd"
 
   [monitor.filter]
   type = "average"
 
   [[monitor.actions]]
   type = "exec"
-  command = ["/some/action/cmd"]
+  command = "/some/action/cmd"
 ```
 
 | Key | Type | Default | Required | Description |
@@ -106,23 +106,107 @@ max = 0.3
 | `filter` | table | | No | Filter properties.  See below. |
 | `actions` | list of table | | Yes | List of action properties.  See below. |
 
-[Annotated sample file](sample.toml).
+See [annotated sample file](sample.toml).
 
 <a name="probes" />
 Probes
 ------
 
+See GoDoc for construction parameters:
+
+* [exec](https://godoc.org/github.com/cybozu-go/goma/probes/exec)
+* [http](https://godoc.org/github.com/cybozu-go/goma/probes/http)
+
 <a name="filters" />
 Filters
 -------
+
+See GoDoc for construction parameters:
+
+* [average](https://godoc.org/github.com/cybozu-go/goma/filters/average)
 
 <a name="actions" />
 Actions
 -------
 
+See GoDoc for construction parameters:
+
+* [exec](https://godoc.org/github.com/cybozu-go/goma/actions/exec)
+* [http](https://godoc.org/github.com/cybozu-go/goma/actions/http)
+
 <a name="api" />
 REST API
 --------
+
+### /list
+
+GET will return a list of monitor status objects in JSON:
+
+```javascript
+[
+    {"id": "0", "name": "monitor1", "running": true, "failing": false},
+    ...
+]
+```
+
+### /register
+
+POST will create and start a new monitor.
+The request content-type must be `application/json`.
+
+The request body is a JSON object just like TOML monitor table:
+
+```javascript
+{
+    "name": "monitor1",
+    "interval": 10,
+    "timeout": 1,
+    "min": 0,
+    "max": 0.3,
+    "probe": {
+        "type": "exec",
+        "command": "/some/probe/cmd"
+    },
+    "filter": {
+        "type": "average"
+    },
+    "actions": [
+        {
+            "type": "exec",
+            "command": "/some/action/cmd"
+        },
+        ...
+    ]
+}
+```
+
+### /monitor/ID
+
+GET returns monitor status for the given ID.
+The response is a JSON object:
+
+```javascript
+{
+    "id": "0",
+    "name": "monitor1",
+    "running": true,
+    "failing": false
+}
+```
+
+DELETE will stop and unregister the monitor.
+
+POST can stop or start the monitor.
+The request content-type should be `text/plain`.
+The request body shall contain either `start` or `stop`.
+
+### /verbosity
+
+GET will return the current verbosity such as "info" or "error".
+
+PUT or POST will modify the verbosity as given by the request body.
+The request content-type should be `text/plain`.
+The request body shall contain only the new verbosity level string.
 
 [systemd]: https://www.freedesktop.org/wiki/Software/systemd/
 [upstart]: http://upstart.ubuntu.com/

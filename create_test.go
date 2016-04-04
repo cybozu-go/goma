@@ -32,12 +32,10 @@ func testMonitor1(t *testing.T, m *MonitorDefinition) {
 	} else if pt != "exec" {
 		t.Error(`pt != "exec"`)
 	}
-	if pcmd, err := GetStringList("command", m.Probe); err != nil {
+	if pcmd, err := GetString("command", m.Probe); err != nil {
 		t.Error(err)
-	} else if len(pcmd) != 1 {
-		t.Error(`len(pcmd) != 1`)
-	} else if pcmd[0] != "/some/probe/cmd" {
-		t.Error(`pcmd[0] != "/some/probe/cmd"`)
+	} else if pcmd != "/some/probe/cmd" {
+		t.Error(`pcmd != "/some/probe/cmd"`)
 	}
 }
 

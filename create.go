@@ -2,6 +2,7 @@ package goma
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/cybozu-go/goma/actions"
@@ -76,7 +77,7 @@ func CreateMonitor(d *MonitorDefinition) (*monitor.Monitor, error) {
 	}
 	probe, err := probes.Construct(t, getParams(d.Probe))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%s: %v in probe", d.Name, err)
 	}
 
 	var filter filters.Filter
@@ -87,7 +88,7 @@ func CreateMonitor(d *MonitorDefinition) (*monitor.Monitor, error) {
 		}
 		f, err := filters.Construct(t, getParams(d.Filter))
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%s: %v in filter", d.Name, err)
 		}
 		filter = f
 	}
@@ -100,7 +101,7 @@ func CreateMonitor(d *MonitorDefinition) (*monitor.Monitor, error) {
 		}
 		a, err := actions.Construct(t, getParams(ad))
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%s: %v in action %s", d.Name, err, t)
 		}
 		actors = append(actors, a)
 	}

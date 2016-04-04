@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"golang.org/x/net/context"
 
@@ -65,7 +66,7 @@ func handleMonitor(ctx context.Context, w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	switch string(data) {
+	switch strings.TrimSpace(string(data)) {
 	case "start":
 		if err := m.Start(ctx); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)

@@ -11,7 +11,7 @@ import (
 type List []*MonitorInfo
 
 func handleList(w http.ResponseWriter, r *http.Request) {
-	var l List
+	l := make(List, 0)
 	for _, m := range monitor.ListMonitors() {
 		l = append(l, &MonitorInfo{
 			ID:      m.ID(),
