@@ -122,7 +122,15 @@ func run(ctx context.Context, m *Monitor, done chan<- struct{}) {
 		m.filter.Init()
 	}
 	for _, a := range m.actors {
-		a.Init(m.name)
+		err := a.Init(m.name)
+		if err != nil {
+			log.Error("failed to init action", map[string]interface{}{
+				"_monitor": m.name,
+				"_action":  a.String(),
+			})
+			done <- struct{}{}
+			return
+		}
 	}
 
 	for {
@@ -150,7 +158,12 @@ func run(ctx context.Context, m *Monitor, done chan<- struct{}) {
 				now := time.Now()
 				m.failedAt = &now
 				for _, a := range m.actors {
-					a.Fail(m.name, v)
+					if err := a.Fail(m.name, v); err != nil {
+						log.Error("failed to call Actor.Fail", map[string]interface{}{
+							"_monitor": m.name,
+							"_action":  a.String(),
+						})
+					}
 				}
 				log.Warn("monitor failure", map[string]interface{}{
 					"_monitor": m.name,
@@ -161,12 +174,17 @@ func run(ctx context.Context, m *Monitor, done chan<- struct{}) {
 			if m.failedAt != nil {
 				d := time.Since(*m.failedAt)
 				for _, a := range m.actors {
-					a.Recover(m.name, d)
+					if err := a.Recover(m.name, d); err != nil {
+						log.Error("failed to call Actor.Recover", map[string]interface{}{
+							"_monitor": m.name,
+							"_action":  a.String(),
+						})
+					}
 				}
 				m.failedAt = nil
 				log.Warn("monitor recovery", map[string]interface{}{
 					"_monitor":  m.name,
-					"_duration": d.Seconds(),
+					"_duration": int(d.Seconds()),
 				})
 			}
 		}

@@ -12,22 +12,25 @@ type Actor interface {
 	// Init is called when goma starts monitoring.
 	//
 	// name is the monitor name.
-	Init(name string)
+	// Non-nil error is logged, and STOPS the monitor.
+	Init(name string) error
 
 	// Fail is called when a probe is start failing.
 	//
 	// name is the monitor name.
 	// v is the returned value from the probe (or a value from the filter).
-	Fail(name string, v float64)
+	// Non-nil error is logged, but will not stop the monitor.
+	Fail(name string, v float64) error
 
 	// Recover is called when a probe is recovered from failure.
 	//
 	// name is the monitor name.
 	// d is the failure duration.
+	// Non-nil error is logged, but will not stop the monitor.
 	//
 	// Note that this may not always be called if goma is stopped
 	// during failure.  Init is the good place to correct such status.
-	Recover(name string, d time.Duration)
+	Recover(name string, d time.Duration) error
 
 	// String returns a descriptive string for this action.
 	String() string

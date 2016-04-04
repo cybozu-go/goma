@@ -9,13 +9,16 @@ import (
 type action struct {
 }
 
-func (a *action) Init(name string) {
+func (a *action) Init(name string) error {
+	return nil
 }
 
-func (a *action) Fail(name string, v float64) {
+func (a *action) Fail(name string, v float64) error {
+	return nil
 }
 
-func (a *action) Recover(name string, d time.Duration) {
+func (a *action) Recover(name string, d time.Duration) error {
+	return nil
 }
 
 func (a *action) String() string {

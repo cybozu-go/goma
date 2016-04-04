@@ -1,23 +1,24 @@
 # Sample configuration for goma monitors.
 
 [[monitor]]
-name = "monitor1"               # any descriptive string.
-interval = 10                   # seconds between probes.
-timeout = 1                     # seconds for timeout of a probe.
-min = 0.0                       # minimum of the normal probe output.
-max = 0.3                       # maximum of the normal probe output.
+name = "monitor1"         # any descriptive string.
+interval = 10             # seconds between probes.
+timeout = 1               # seconds for timeout of a probe.
+min = 0.0                 # minimum of the normal probe output.
+max = 0.3                 # maximum of the normal probe output.
 
   [monitor.probe]
-  type = "exec"                 # probe type. required.
-  command = "/some/probe/cmd"   # probe options.
+  type = "exec"                   # probe type. required.
+  command = "/some/probe/cmd"     # probe options.
 
-  [monitor.filter]              # filter is optional.
-  type = "average"              # filter type.
+  [monitor.filter]                # filter is optional.
+  type = "average"                # filter type.
 
-  [[monitor.actions]]           # list of actions.
-  type = "exec"                 # action type.
-  command = "/some/action/cmd"  # action options
-  args = ["arg1", "arg2"]       # ditto.
+  [[monitor.actions]]             # list of actions.
+  type = "exec"                   # action type.
+  command = "/action/cmd"         # action options.
+  args = ["arg1", "argw2"]        # ditto.
+  env = ["HOGE=123", "FUGA=456"]  # ditto.
 
 
 [[monitor]]
@@ -34,9 +35,9 @@ timeout = 5
   smtp = "localhost:25"
   from = "no-reply@example.org"
   to = ["admin@example.org"]
-  send_on_start = true
+  send_on_init = true
 
   [[monitor.actions]]
   type = "http"
-  url = "http://example.org/alert"
+  url_fail = "http://example.org/fail"
   method = "post"

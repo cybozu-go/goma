@@ -37,7 +37,7 @@ func (f *filter) Put(v float64) (avg float64) {
 }
 
 func (f *filter) String() string {
-	return fmt.Sprintf("filter:average(window=%d, init=%f)",
+	return fmt.Sprintf("filter:average(window=%d, init=%g)",
 		len(f.values), f.init)
 }
 
