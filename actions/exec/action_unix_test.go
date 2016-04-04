@@ -41,6 +41,7 @@ func TestFail(t *testing.T) {
 		"command": "sh",
 		"args": []interface{}{"-u", "-c", `
 echo GOMA_VALUE=$GOMA_VALUE
+if [ "$GOMA_EVENT" != "fail" ]; then exit 1; fi
 if [ "$GOMA_VALUE" != "0.1" ]; then exit 1; fi
 `},
 	})
@@ -60,6 +61,7 @@ func TestRecover(t *testing.T) {
 		"command": "sh",
 		"args": []interface{}{"-u", "-c", `
 echo GOMA_DURATION=$GOMA_DURATION
+if [ "$GOMA_EVENT" != "recover" ]; then exit 1; fi
 if [ "$GOMA_DURATION" != "39" ]; then exit 1; fi
 `},
 	})
