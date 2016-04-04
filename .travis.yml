@@ -4,6 +4,11 @@ go:
   - 1.6
   - tip
 
+before_install:
+  - go get github.com/golang/lint/golint
+
 script:
   - go install ./...
   - go test -v ./...
+  - go vet -x ./...
+  - $HOME/gopath/bin/golint ./... | xargs -r false

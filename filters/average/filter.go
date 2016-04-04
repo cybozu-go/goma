@@ -44,29 +44,29 @@ func (f *filter) String() string {
 func construct(params map[string]interface{}) (filters.Filter, error) {
 	var init float64
 	if v, ok := params["init"]; ok {
-		if f, ok := v.(float64); ok {
-			init = f
-		} else {
+		init, ok = v.(float64)
+		if !ok {
 			return nil, fmt.Errorf("init is not a float: %v", v)
 		}
 	}
 
 	var window = defaultWindowSize
 	if v, ok := params["window"]; ok {
-		if i, ok := v.(int); ok {
-			if i < 1 {
-				return nil, fmt.Errorf("too small window size: %d", i)
-			}
-			window = i
-		} else {
+		window, ok = v.(int)
+		if !ok {
 			return nil, fmt.Errorf("window is not an integer: %v", v)
+		}
+		if window < 1 {
+			return nil, fmt.Errorf("too small window size: %d", window)
 		}
 	}
 
-	return &filter{
+	f := &filter{
 		init:   init,
 		values: make([]float64, window),
-	}, nil
+	}
+	f.Init()
+	return f, nil
 }
 
 func init() {
