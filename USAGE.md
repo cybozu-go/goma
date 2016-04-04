@@ -15,11 +15,9 @@ Table of contents:
 Running goma agent
 ------------------
 
-`goma` command works as a monitoring agent (server) if no command
-is given at command-line.
-
-`goma` does not provide so-called *daemon* mode.  Please use [systemd][]
-or [upstart][] to run it in the background.
+`goma` command works as a monitoring agent (server) if "serve" is given
+at command-line.  `goma` does not provide so-called *daemon* mode.
+Please use [systemd][] or [upstart][] to run it in the background.
 
 At startup, `goma` will load [TOML][] configuration files from a
 directory (default is `/usr/local/etc/goma`).  Each file can define
@@ -29,10 +27,10 @@ multiple monitors as described below.
 Client commands
 ---------------
 
-`goma` works as clients if a command is given at command-line.
+`goma` works as clients for commands other than "serve".
 
 By default, `goma` connects to the agent running on "localhost:3838".
-Use `-s` option to specify other addresses.
+Use `-s` option to change the address.
 
 ### list
 

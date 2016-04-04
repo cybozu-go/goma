@@ -33,16 +33,17 @@ var (
 )
 
 func usage() {
-	fmt.Fprint(os.Stderr, `Usage: goma [options] [COMMAND arg...]
+	fmt.Fprint(os.Stderr, `Usage: goma [options] COMMAND [arg...]
 
-Without COMMAND, goma runs in server mode.
-If COMMAND is present, goma works as a client for goma server.
+If COMMAND is "serve", goma runs in server mode.
+For other commands, goma works as a client for goma server.
 
 Options:
 `)
 	flag.PrintDefaults()
 	fmt.Fprint(os.Stderr, `
 Commands:
+    serve              Start agent server.
     list               List registered monitors.
     register FILE      Register monitors defined in FILE.
                        If FILE is "-", goma reads from stdin.
@@ -58,8 +59,17 @@ func main() {
 	flag.Usage = usage
 	flag.Parse()
 
-	if len(flag.Args()) > 0 {
-		err := runCommand(flag.Arg(0), flag.Args()[1:])
+	args := flag.Args()
+
+	if len(args) == 0 {
+		usage()
+		return
+	}
+
+	cmd := args[0]
+
+	if cmd != "serve" {
+		err := runCommand(cmd, args[1:])
 		if err != nil {
 			fmt.Fprintln(os.Stderr, strings.TrimSpace(err.Error()))
 			os.Exit(1)
