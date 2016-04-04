@@ -200,7 +200,8 @@ The request body shall contain either `start` or `stop`.
 
 ### /verbosity
 
-GET will return the current verbosity such as "info" or "error".
+GET will return the current verbosity.  
+Possible values are: "critical", "error", "warning", "info", and "debug".
 
 PUT or POST will modify the verbosity as given by the request body.
 The request content-type should be `text/plain`.

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 
 	"github.com/BurntSushi/toml"
@@ -14,7 +15,15 @@ func loadTOML(f string) ([]*goma.MonitorDefinition, error) {
 	s := &struct {
 		Monitors []*goma.MonitorDefinition `toml:"monitor"`
 	}{nil}
-	md, err := toml.DecodeFile(f, s)
+	fn := func() (toml.MetaData, error) {
+		return toml.DecodeFile(f, s)
+	}
+	if f == "-" {
+		fn = func() (toml.MetaData, error) {
+			return toml.DecodeReader(os.Stdin, s)
+		}
+	}
+	md, err := fn()
 	if err != nil {
 		return nil, err
 	}
