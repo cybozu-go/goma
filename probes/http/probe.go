@@ -25,7 +25,7 @@ type probe struct {
 	errval float64
 }
 
-func (p *probe) Probe(ctx context.Context) (float64, error) {
+func (p *probe) Probe(ctx context.Context) float64 {
 	header := make(http.Header)
 	for k, v := range p.header {
 		header.Set(k, v)
@@ -43,41 +43,50 @@ func (p *probe) Probe(ctx context.Context) (float64, error) {
 
 	resp, err := ctxhttp.Do(ctx, p.client, req)
 	if err != nil {
-		if err == context.DeadlineExceeded && log.Enabled(log.LvDebug) {
-			log.Debug("probe:http timeout", map[string]interface{}{
+		if err == context.DeadlineExceeded {
+			log.Warn("probe:http timeout", map[string]interface{}{
 				"_url": p.url.String(),
+			})
+		} else {
+			log.Error("probe:http error", map[string]interface{}{
+				"_url": p.url.String(),
+				"_err": err.Error(),
 			})
 		}
 		if p.parse {
-			return p.errval, err
+			return p.errval
 		}
-		return 1.0, err
+		return 1.0
 	}
 	defer resp.Body.Close()
 
 	data, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		if p.parse {
-			return p.errval, err
+			return p.errval
 		}
-		return 1.0, err
+		return 1.0
 	}
 
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		if p.parse {
-			return p.errval, nil
+			return p.errval
 		}
-		return 1.0, nil
+		return 1.0
 	}
 
 	if p.parse {
 		f, err := strconv.ParseFloat(strings.TrimSpace(string(data)), 64)
 		if err != nil {
-			return p.errval, err
+			log.Error("probe:http parsing failure", map[string]interface{}{
+				"_url": p.url.String(),
+				"_err": err.Error(),
+			})
+			return p.errval
 		}
-		return f, nil
+		return f
 	}
-	return 0, nil
+	return 0
 }
 
 func (p *probe) String() string {

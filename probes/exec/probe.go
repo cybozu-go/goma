@@ -30,47 +30,46 @@ func (p *probe) createCmd() *exec.Cmd {
 	return cmd
 }
 
-type retType struct {
-	f   float64
-	err error
-}
-
-func (p *probe) Probe(ctx context.Context) (float64, error) {
+func (p *probe) Probe(ctx context.Context) float64 {
 	cmd := p.createCmd()
-	ch := make(chan retType, 1)
+	ch := make(chan float64, 1)
 
 	go func() {
 		data, err := cmd.Output()
-		if p.parse {
-			f, err := strconv.ParseFloat(strings.TrimSpace(string(data)), 64)
-			if err != nil {
-				ch <- retType{p.errval, err}
+		if err != nil {
+			if p.parse {
+				ch <- p.errval
 			} else {
-				ch <- retType{f, nil}
+				ch <- 1.0
 			}
 			return
 		}
-		if err != nil {
-			ch <- retType{1.0, err}
+
+		if p.parse {
+			f, err := strconv.ParseFloat(strings.TrimSpace(string(data)), 64)
+			if err != nil {
+				ch <- p.errval
+			} else {
+				ch <- f
+			}
 			return
 		}
-		ch <- retType{0, nil}
+
+		ch <- 0
 	}()
 
 	select {
 	case ret := <-ch:
-		return ret.f, ret.err
+		return ret
 	case <-ctx.Done():
 		cmd.Process.Kill()
-		if log.Enabled(log.LvDebug) {
-			log.Debug("probe:exec killed", map[string]interface{}{
-				"_command": p.command,
-			})
-		}
+		log.Warn("probe:exec killed", map[string]interface{}{
+			"_command": p.command,
+		})
 		if p.parse {
-			return p.errval, ctx.Err()
+			return p.errval
 		}
-		return 1.0, ctx.Err()
+		return 1.0
 	}
 }
 

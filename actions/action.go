@@ -18,8 +18,7 @@ type Actor interface {
 	//
 	// name is the monitor name.
 	// v is the returned value from the probe (or a value from the filter).
-	// err is the returned value from the probe.  err may be nil.
-	Fail(name string, v float64, err error)
+	Fail(name string, v float64)
 
 	// Recover is called when a probe is recovered from failure.
 	//

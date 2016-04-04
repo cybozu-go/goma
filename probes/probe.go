@@ -13,13 +13,13 @@ type Prober interface {
 	// Probe implements a probing method.
 	//
 	// The returned float64 value will be interpreted by the monitor
-	// who run the probe.  If the probe encounters some error, it may
-	// return non-nil error as well.
+	// who run the probe.  Errors occurring within the probe should
+	// produce a float64 value indicating the error.
 	//
 	// ctx.Deadline() is always set.
 	// Probe must return immediately when the ctx.Done() is closed.
-	// Return values will not be used in such cases.
-	Probe(ctx context.Context) (float64, error)
+	// The return value will not be used in such cases.
+	Probe(ctx context.Context) float64
 
 	// String returns a descriptive string for this probe.
 	String() string

@@ -93,18 +93,12 @@ func TestConstruct(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	f, err := p.Probe(context.Background())
-	if err != nil {
-		t.Error(err)
-	}
+	f := p.Probe(context.Background())
 	if f != 0 {
 		t.Error(`f != 0`)
 	}
 	// repeat
-	f, err = p.Probe(context.Background())
-	if err != nil {
-		t.Error(err)
-	}
+	f = p.Probe(context.Background())
 	if f != 0 {
 		t.Error(`f != 0`)
 	}
@@ -115,10 +109,7 @@ func TestConstruct(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	f, err = p.Probe(context.Background())
-	if err != nil {
-		t.Error(err)
-	}
+	f = p.Probe(context.Background())
 	if !goma.FloatEquals(f, 1.0) {
 		t.Error(`!goma.FloatEquals(f, 1.0)`)
 	}
@@ -137,10 +128,7 @@ func TestHeader(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	f, err := p.Probe(context.Background())
-	if err != nil {
-		t.Error(err)
-	}
+	f := p.Probe(context.Background())
 	if f != 0 {
 		t.Error(`f != 0`)
 	}
@@ -152,10 +140,7 @@ func TestHeader(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	f, err = p.Probe(context.Background())
-	if err != nil {
-		t.Error(err)
-	}
+	f = p.Probe(context.Background())
 	if !goma.FloatEquals(f, 1.0) {
 		t.Error(`!goma.FloatEquals(f, 1.0)`)
 	}
@@ -175,10 +160,7 @@ func TestUserAgent(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	f, err := p.Probe(context.Background())
-	if err != nil {
-		t.Error(err)
-	}
+	f := p.Probe(context.Background())
 	if f != 0 {
 		t.Error(`f != 0`)
 	}
@@ -191,10 +173,7 @@ func TestUserAgent(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	f, err = p.Probe(context.Background())
-	if err != nil {
-		t.Error(err)
-	}
+	f = p.Probe(context.Background())
 	if f != 0 {
 		t.Error(`f != 0`)
 	}
@@ -211,10 +190,7 @@ func TestMethod(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	f, err := p.Probe(context.Background())
-	if err != nil {
-		t.Error(err)
-	}
+	f := p.Probe(context.Background())
 	if f != 0 {
 		t.Error(`f != 0`)
 	}
@@ -226,10 +202,7 @@ func TestMethod(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	f, err = p.Probe(context.Background())
-	if err != nil {
-		t.Error(err)
-	}
+	f = p.Probe(context.Background())
 	if !goma.FloatEquals(f, 1.0) {
 		t.Error(`!goma.FloatEquals(f, 1.0)`)
 	}
@@ -251,10 +224,7 @@ func TestProxy(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	f, err := p.Probe(context.Background())
-	if err != nil {
-		t.Error(err)
-	}
+	f := p.Probe(context.Background())
 	if f != 0 {
 		t.Error(`f != 0`)
 	}
@@ -271,10 +241,7 @@ func TestParse(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	f, err := p.Probe(context.Background())
-	if err != nil {
-		t.Error(err)
-	}
+	f := p.Probe(context.Background())
 	if !goma.FloatEquals(f, 123.45) {
 		t.Error(`!goma.FloatEquals(f, 123.45)`)
 	}
@@ -288,7 +255,7 @@ func TestParse(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	f, err = p.Probe(context.Background())
+	f = p.Probe(context.Background())
 	if !goma.FloatEquals(f, 100.0) {
 		t.Error(`!goma.FloatEquals(f, 100.0)`)
 	}
@@ -305,10 +272,7 @@ func TestTimeout(t *testing.T) {
 	}
 
 	ctx, _ := context.WithTimeout(context.Background(), 1*time.Second)
-	f, err := p.Probe(ctx)
-	if err != context.DeadlineExceeded {
-		t.Error(`err != context.DeadlineExceeded`)
-	}
+	f := p.Probe(ctx)
 	if !goma.FloatEquals(f, 1.0) {
 		t.Error(`!goma.FloatEquals(f, 1.0)`)
 	}

@@ -111,7 +111,7 @@ func (m *Monitor) Stop() {
 	})
 }
 
-func callProbe(ctx context.Context, p probes.Prober, timeout time.Duration) (float64, error) {
+func callProbe(ctx context.Context, p probes.Prober, timeout time.Duration) float64 {
 	ctx, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
 	return p.Probe(ctx)
@@ -130,7 +130,7 @@ func run(ctx context.Context, m *Monitor, done chan<- struct{}) {
 		// This way, we can keep consistent interval between probes.
 		t := time.After(m.interval)
 
-		v, err := callProbe(ctx, m.probe, m.timeout)
+		v := callProbe(ctx, m.probe, m.timeout)
 
 		// check cancel
 		select {
@@ -150,18 +150,13 @@ func run(ctx context.Context, m *Monitor, done chan<- struct{}) {
 				now := time.Now()
 				m.failedAt = &now
 				for _, a := range m.actors {
-					a.Fail(m.name, v, err)
+					a.Fail(m.name, v)
 				}
-				fields := map[string]interface{}{
+				log.Warn("monitor failure", map[string]interface{}{
 					"_monitor": m.name,
 					"_value":   fmt.Sprint(v),
-				}
-				if err != nil {
-					fields["_err"] = err.Error()
-				}
-				log.Warn("monitor failure", fields)
+				})
 			}
-
 		} else {
 			if m.failedAt != nil {
 				d := time.Since(*m.failedAt)

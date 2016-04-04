@@ -8,8 +8,8 @@ import (
 type probe struct {
 }
 
-func (p *probe) Probe(ctx context.Context) (float64, error) {
-	return 0, nil
+func (p *probe) Probe(ctx context.Context) float64 {
+	return 0
 }
 
 func (p *probe) String() string {
