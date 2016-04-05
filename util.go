@@ -44,7 +44,7 @@ func GetInt(key string, m map[string]interface{}) (int, error) {
 }
 
 // GetFloat extracts a float from TOML decoded map.
-// If m[key] does not exist or is not a float, non-nil error is returned.
+// If m[key] does not exist or is not a float/int, non-nil error is returned.
 func GetFloat(key string, m map[string]interface{}) (float64, error) {
 	v, ok := m[key]
 	if !ok {
@@ -52,6 +52,10 @@ func GetFloat(key string, m map[string]interface{}) (float64, error) {
 	}
 	f, ok := v.(float64)
 	if !ok {
+		i, ok := v.(int)
+		if ok {
+			return float64(i), nil
+		}
 		return 0, ErrInvalidType
 	}
 	return f, nil
