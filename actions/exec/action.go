@@ -95,7 +95,7 @@ func (a *action) Fail(name string, v float64) error {
 		fmt.Sprintf("%s=%s", envMonitor, name),
 		fmt.Sprintf("%s=%s", envVersion, goma.Version),
 		fmt.Sprintf("%s=%s", envEvent, eventFail),
-		fmt.Sprintf("%s=%g", envValue, v), // suppress trailing zeroes.
+		fmt.Sprintf("%s=%g", envValue, v), // %g suppresses trailing zeroes.
 	}
 	return a.run(env)
 }

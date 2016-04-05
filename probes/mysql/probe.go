@@ -5,6 +5,9 @@ import (
 	"golang.org/x/net/context"
 )
 
+// Obtain connection ID by "SELECT connection_id()",
+// kill it by "KILL ID" to interrupt the query execution.
+
 type probe struct {
 }
 
