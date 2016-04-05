@@ -32,40 +32,40 @@ Client commands
 By default, `goma` connects to the agent running on "localhost:3838".
 Use `-s` option to change the address.
 
-### list
+* list
 
-`goma list` lists all registered monitors.
+    `goma list` lists all registered monitors.
 
-### show
+* show
 
-`goma show ID` show the status of a monitor for ID.
-The ID can be identified by list command.
+    `goma show ID` show the status of a monitor for ID.
+    The ID can be identified by list command.
 
-### start
+* start
 
-`goma start ID` starts the monitor for ID.
+    `goma start ID` starts the monitor for ID.
 
-### stop
+* stop
 
-`goma stop ID` stops the monitor for ID.
+    `goma stop ID` stops the monitor for ID.
 
-### register
+* register
 
-`goma register FILE` loads monitor definitions from a TOML file,
-register them into the agent, then starts the new monitors.
+    `goma register FILE` loads monitor definitions from a TOML file,
+    register them into the agent, then starts the new monitors.
 
-If FILE is "-", definitions are read from stdin.
+    If FILE is "-", definitions are read from stdin.
 
-### unregister
+* unregister
 
-`goma unregister ID` stops and unregister the monitor for ID.
+   `goma unregister ID` stops and unregister the monitor for ID.
 
-### verbosity
+* verbosity
 
-`goma verbosity LEVEL` changes the logging threshold.  
-Available levels are: `debug`, `info`, `warn`, `error`, `critical`
+    `goma verbosity LEVEL` changes the logging threshold.  
+    Available levels are: `debug`, `info`, `warn`, `error`, `critical`
 
-`goma verbosity` queries the current logging threshold.
+    `goma verbosity` queries the current logging threshold.
 
 <a name="define" />
 Defining monitors
