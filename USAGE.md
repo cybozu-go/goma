@@ -114,6 +114,7 @@ See GoDoc for construction parameters:
 
 * [exec](https://godoc.org/github.com/cybozu-go/goma/probes/exec)
 * [http](https://godoc.org/github.com/cybozu-go/goma/probes/http)
+* [mysql](https://godoc.org/github.com/cybozu-go/goma/probes/mysql)
 
 <a name="filters" />
 Filters
