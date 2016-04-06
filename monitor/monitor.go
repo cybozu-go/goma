@@ -111,6 +111,13 @@ func (m *Monitor) Stop() {
 	})
 }
 
+func (m *Monitor) die() {
+	m.lock.Lock()
+	defer m.lock.Unlock()
+
+	m.done = nil
+}
+
 func callProbe(ctx context.Context, p probes.Prober, timeout time.Duration) float64 {
 	ctx, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
@@ -128,7 +135,8 @@ func run(ctx context.Context, m *Monitor, done chan<- struct{}) {
 				"_monitor": m.name,
 				"_action":  a.String(),
 			})
-			done <- struct{}{}
+			close(done)
+			m.die()
 			return
 		}
 	}
