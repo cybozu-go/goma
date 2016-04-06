@@ -32,10 +32,8 @@ timeout = 5
 
   [[monitor.actions]]
   type = "mail"
-  smtp = "localhost:25"
   from = "no-reply@example.org"
-  to = ["admin@example.org"]
-  send_on_init = true
+  fail_to = ["admin@example.org"]
 
   [[monitor.actions]]
   type = "http"

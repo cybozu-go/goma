@@ -15,8 +15,8 @@ Table of contents:
 Running goma agent
 ------------------
 
-`goma` command works as a monitoring agent (server) if "serve" is given
-at command-line.  `goma` does not provide so-called *daemon* mode.
+`goma serve` starts monitoring agent (server).  
+`goma` does not provide so-called *daemon* mode.
 Please use [systemd][] or [upstart][] to run it in the background.
 
 At startup, `goma` will load [TOML][] configuration files from a
@@ -89,8 +89,9 @@ max = 0.3
   type = "average"
 
   [[monitor.actions]]
-  type = "exec"
-  command = "/some/action/cmd"
+  type = "mail"
+  from = "no-reply@example.org"
+  to = ["alert@example.org"]
 ```
 
 | Key | Type | Default | Required | Description |
@@ -132,6 +133,7 @@ See GoDoc for construction parameters:
 
 * [exec](https://godoc.org/github.com/cybozu-go/goma/actions/exec)
 * [http](https://godoc.org/github.com/cybozu-go/goma/actions/http)
+* [mail](https://godoc.org/github.com/cybozu-go/goma/actions/mail)
 
 <a name="api" />
 REST API

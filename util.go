@@ -50,15 +50,14 @@ func GetFloat(key string, m map[string]interface{}) (float64, error) {
 	if !ok {
 		return 0, ErrNoKey
 	}
-	f, ok := v.(float64)
-	if !ok {
-		i, ok := v.(int)
-		if ok {
-			return float64(i), nil
-		}
+	switch v := v.(type) {
+	case float64:
+		return v, nil
+	case int:
+		return float64(v), nil
+	default:
 		return 0, ErrInvalidType
 	}
-	return f, nil
 }
 
 // GetString extracts a string from TOML decoded map.
