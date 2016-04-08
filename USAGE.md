@@ -9,6 +9,7 @@ Table of contents:
 * [Probes](#probes)
 * [Filters](#filters)
 * [Actions](#actions)
+* [Security](#security)
 * [REST API](#api)
 
 <a name="agent" />
@@ -135,6 +136,25 @@ See GoDoc for construction parameters:
 * [http](https://godoc.org/github.com/cybozu-go/goma/actions/http)
 * [mail](https://godoc.org/github.com/cybozu-go/goma/actions/mail)
 
+<a name="security" />
+Security
+--------
+
+Care must be taken on which address and user will goma run.
+
+Since goma can add dynamically a monitor to execute arbitrary commands,
+it is strongly discouraged to run goma as root (super user), or listen
+on any address.
+
+By default, goma listens on "localhost:3838" so that only local users
+can access its REST API.  You may change the address to, say, ":3838"
+to accept requests from remote hosts.  Use firewalls like [iptables][],
+[ufw][], or [firewalld][] to restrict access.
+
+Strongly recommended is to create a user solely for goma, and run goma
+as that user.  To escalate privileges for some probes, `sudo` with
+properly configured `/etc/sudoers` can be used.
+
 <a name="api" />
 REST API
 --------
@@ -199,17 +219,20 @@ DELETE will stop and unregister the monitor.
 
 POST can stop or start the monitor.
 The request content-type should be `text/plain`.
-The request body shall contain either `start` or `stop`.
+The request body shall be either `start` or `stop`.
 
 ### /verbosity
 
 GET will return the current verbosity.  
-Possible values are: "critical", "error", "warning", "info", and "debug".
+Possible values are: `critical`, `error`, `warning`, `info`, and `debug`.
 
 PUT or POST will modify the verbosity as given by the request body.
 The request content-type should be `text/plain`.
-The request body shall contain only the new verbosity level string.
+The request body shall be the new verbosity level string such as "error".
 
 [systemd]: https://www.freedesktop.org/wiki/Software/systemd/
 [upstart]: http://upstart.ubuntu.com/
 [TOML]: https://github.com/toml-lang/toml
+[iptables]: https://en.wikipedia.org/wiki/Iptables
+[ufw]: https://wiki.ubuntu.com/UncomplicatedFirewall
+[firewalld]: https://fedoraproject.org/wiki/FirewallD
