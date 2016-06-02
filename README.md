@@ -1,5 +1,5 @@
 ![Goma image](goma.png)
-[![Build Status](https://travis-ci.org/cybozu-go/goma.png)](https://travis-ci.org/cybozu-go/goma)
+[![Build Status](https://travis-ci.org/cybozu-go/goma.svg?branch=master)](https://travis-ci.org/cybozu-go/goma)
 
 Goma is:
 
