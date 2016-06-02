@@ -83,7 +83,7 @@ min = 0.0
 max = 0.3
 
   [monitor.probe]
-  type = "exec",
+  type = "exec"
   command = "/some/probe/cmd"
 
   [monitor.filter]
