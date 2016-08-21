@@ -10,4 +10,4 @@ All notable changes to this project will be documented in this file.
 
 [cmd]: https://github.com/cybozu-go/cmd
 [spec]: https://github.com/cybozu-go/cmd/blob/master/README.md#specifications
-[Unreleased]: https://github.com/cybozu-go/aptutil/compare/v0.1...HEAD
+[Unreleased]: https://github.com/cybozu-go/goma/compare/v0.1...HEAD
