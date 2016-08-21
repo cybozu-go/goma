@@ -1,6 +1,7 @@
 package http
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -10,9 +11,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"golang.org/x/net/context"
-	"golang.org/x/net/context/ctxhttp"
 
 	"github.com/cybozu-go/goma"
 	"github.com/cybozu-go/goma/actions"
@@ -91,17 +89,13 @@ func (a *action) request(u *url.URL, params map[string]string) error {
 		Host:          u.Host,
 	}
 
-	if a.timeout == 0 {
-		resp, err := client.Do(req)
-		if err != nil {
-			return err
-		}
-		return processResponse(u, resp)
+	if a.timeout > 0 {
+		ctx, cancel := context.WithTimeout(context.Background(), a.timeout)
+		defer cancel()
+		req = req.WithContext(ctx)
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), a.timeout)
-	defer cancel()
-	resp, err := ctxhttp.Do(ctx, client, req)
+	resp, err := client.Do(req)
 	if err != nil {
 		return err
 	}

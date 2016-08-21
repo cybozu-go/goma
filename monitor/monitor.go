@@ -1,15 +1,16 @@
 package monitor
 
 import (
+	"context"
 	"fmt"
 	"sync"
 	"time"
 
+	"github.com/cybozu-go/cmd"
 	"github.com/cybozu-go/goma/actions"
 	"github.com/cybozu-go/goma/filters"
 	"github.com/cybozu-go/goma/probes"
 	"github.com/cybozu-go/log"
-	"golang.org/x/net/context"
 )
 
 // Monitor is a unit of monitoring.
@@ -64,7 +65,7 @@ func NewMonitor(
 
 // Start starts monitoring.
 // If already started, this returns a non-nil error.
-func (m *Monitor) Start(ctx context.Context) error {
+func (m *Monitor) Start() error {
 	m.lock.Lock()
 	defer m.lock.Unlock()
 
@@ -74,13 +75,13 @@ func (m *Monitor) Start(ctx context.Context) error {
 
 	done := make(chan struct{})
 	m.done = done
-	ctx, cancel := context.WithCancel(ctx)
+	ctx, cancel := context.WithCancel(cmd.Context())
 	m.cancel = cancel
 
 	go run(ctx, m, done)
 
 	log.Info("monitor started", map[string]interface{}{
-		"_monitor": m.name,
+		"monitor": m.name,
 	})
 
 	return nil
@@ -96,7 +97,7 @@ func (m *Monitor) Stop() {
 	}
 
 	log.Debug("monitor is stopping", map[string]interface{}{
-		"_monitor": m.name,
+		"monitor": m.name,
 	})
 
 	m.cancel()
@@ -107,7 +108,7 @@ func (m *Monitor) Stop() {
 	m.failedAt = nil
 
 	log.Info("monitor stopped", map[string]interface{}{
-		"_monitor": m.name,
+		"monitor": m.name,
 	})
 }
 
@@ -132,8 +133,8 @@ func run(ctx context.Context, m *Monitor, done chan<- struct{}) {
 		err := a.Init(m.name)
 		if err != nil {
 			log.Error("failed to init action", map[string]interface{}{
-				"_monitor": m.name,
-				"_action":  a.String(),
+				"monitor": m.name,
+				"action":  a.String(),
 			})
 			close(done)
 			m.die()
@@ -168,14 +169,14 @@ func run(ctx context.Context, m *Monitor, done chan<- struct{}) {
 				for _, a := range m.actors {
 					if err := a.Fail(m.name, v); err != nil {
 						log.Error("failed to call Actor.Fail", map[string]interface{}{
-							"_monitor": m.name,
-							"_action":  a.String(),
+							"monitor": m.name,
+							"action":  a.String(),
 						})
 					}
 				}
 				log.Warn("monitor failure", map[string]interface{}{
-					"_monitor": m.name,
-					"_value":   fmt.Sprint(v),
+					"monitor": m.name,
+					"value":   fmt.Sprint(v),
 				})
 			}
 		} else {
@@ -184,15 +185,15 @@ func run(ctx context.Context, m *Monitor, done chan<- struct{}) {
 				for _, a := range m.actors {
 					if err := a.Recover(m.name, d); err != nil {
 						log.Error("failed to call Actor.Recover", map[string]interface{}{
-							"_monitor": m.name,
-							"_action":  a.String(),
+							"monitor": m.name,
+							"action":  a.String(),
 						})
 					}
 				}
 				m.failedAt = nil
 				log.Warn("monitor recovery", map[string]interface{}{
-					"_monitor":  m.name,
-					"_duration": int(d.Seconds()),
+					"monitor":  m.name,
+					"duration": int(d.Seconds()),
 				})
 			}
 		}

@@ -1,11 +1,10 @@
 package mysql
 
 import (
+	"context"
 	"os"
 	"testing"
 	"time"
-
-	"golang.org/x/net/context"
 
 	"github.com/cybozu-go/goma"
 )

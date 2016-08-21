@@ -7,8 +7,6 @@ import (
 	"strconv"
 	"strings"
 
-	"golang.org/x/net/context"
-
 	"github.com/cybozu-go/goma/monitor"
 	"github.com/gorilla/mux"
 )
@@ -22,7 +20,7 @@ type MonitorInfo struct {
 	Failing bool   `json:"failing"`
 }
 
-func handleMonitor(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func handleMonitor(w http.ResponseWriter, r *http.Request) {
 	// guaranteed no error by mux.
 	id, _ := strconv.Atoi(mux.Vars(r)["id"])
 
@@ -68,7 +66,7 @@ func handleMonitor(ctx context.Context, w http.ResponseWriter, r *http.Request) 
 
 	switch strings.TrimSpace(string(data)) {
 	case "start":
-		if err := m.Start(ctx); err != nil {
+		if err := m.Start(); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	case "stop":

@@ -1,6 +1,7 @@
 package http
 
 import (
+	"context"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -12,8 +13,6 @@ import (
 	"github.com/cybozu-go/goma"
 	"github.com/cybozu-go/goma/probes"
 	"github.com/cybozu-go/log"
-	"golang.org/x/net/context"
-	"golang.org/x/net/context/ctxhttp"
 )
 
 type probe struct {
@@ -41,18 +40,12 @@ func (p *probe) Probe(ctx context.Context) float64 {
 		Host:       p.url.Host,
 	}
 
-	resp, err := ctxhttp.Do(ctx, p.client, req)
+	resp, err := p.client.Do(req.WithContext(ctx))
 	if err != nil {
-		if err == context.DeadlineExceeded {
-			log.Warn("probe:http timeout", map[string]interface{}{
-				"_url": p.url.String(),
-			})
-		} else {
-			log.Error("probe:http error", map[string]interface{}{
-				"_url": p.url.String(),
-				"_err": err.Error(),
-			})
-		}
+		log.Error("probe:http error", map[string]interface{}{
+			"url":   p.url.String(),
+			"error": err.Error(),
+		})
 		if p.parse {
 			return p.errval
 		}
@@ -79,8 +72,8 @@ func (p *probe) Probe(ctx context.Context) float64 {
 		f, err := strconv.ParseFloat(strings.TrimSpace(string(data)), 64)
 		if err != nil {
 			log.Error("probe:http parsing failure", map[string]interface{}{
-				"_url": p.url.String(),
-				"_err": err.Error(),
+				"url":   p.url.String(),
+				"error": err.Error(),
 			})
 			return p.errval
 		}

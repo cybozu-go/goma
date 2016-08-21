@@ -3,10 +3,9 @@
 package exec
 
 import (
+	"context"
 	"testing"
 	"time"
-
-	"golang.org/x/net/context"
 
 	"github.com/cybozu-go/goma"
 )
@@ -120,7 +119,8 @@ func TestProbeTimeout(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	ctx, _ := context.WithTimeout(context.Background(), 1*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	defer cancel()
 	f := p.Probe(ctx)
 	if !goma.FloatEquals(f, 1.0) {
 		t.Error(`!goma.FloatEquals(f, 1.0)`)
