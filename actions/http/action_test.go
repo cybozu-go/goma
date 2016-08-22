@@ -12,8 +12,6 @@ import (
 	"testing"
 	"time"
 
-	"golang.org/x/net/context"
-
 	"github.com/cybozu-go/goma"
 )
 
@@ -274,7 +272,11 @@ func TestTimeout(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if err := a.Init("monitor1"); err != context.DeadlineExceeded {
-		t.Error(`err != context.DeadlineExceeded`)
+	// When request is canceled, net/http returns an unexported error
+	// (errRequestCanceled = errors.New("net/http: request canceled").
+	//
+	// To test cancelation, only we can do here is to test err != nil.
+	if err := a.Init("monitor1"); err == nil {
+		t.Error(`err := a.Init("monitor1"); err == nil`)
 	}
 }

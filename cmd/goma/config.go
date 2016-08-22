@@ -8,7 +8,6 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/cybozu-go/goma"
 	"github.com/cybozu-go/goma/monitor"
-	"golang.org/x/net/context"
 )
 
 func loadTOML(f string) ([]*goma.MonitorDefinition, error) {
@@ -33,7 +32,7 @@ func loadTOML(f string) ([]*goma.MonitorDefinition, error) {
 	return s.Monitors, nil
 }
 
-func loadFile(ctx context.Context, f string) error {
+func loadFile(f string) error {
 	defs, err := loadTOML(f)
 	if err != nil {
 		return err
@@ -51,19 +50,19 @@ func loadFile(ctx context.Context, f string) error {
 	for _, m := range monitors {
 		// ignoring errors is safe at this point.
 		monitor.Register(m)
-		m.Start(ctx)
+		m.Start()
 	}
 	return nil
 }
 
-func loadConfigs(ctx context.Context, dir string) error {
+func loadConfigs(dir string) error {
 	files, err := filepath.Glob(filepath.Join(dir, "*.toml"))
 	if err != nil {
 		return err
 	}
 
 	for _, f := range files {
-		if err := loadFile(ctx, f); err != nil {
+		if err := loadFile(f); err != nil {
 			return err
 		}
 	}

@@ -1,6 +1,7 @@
 package exec
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"os/exec"
@@ -30,6 +31,7 @@ type action struct {
 	args    []string
 	env     []string
 	timeout time.Duration
+	debug   bool
 }
 
 func mergeEnv(env, bgenv []string) (merged []string) {
@@ -48,37 +50,26 @@ func mergeEnv(env, bgenv []string) (merged []string) {
 }
 
 func (a *action) run(env []string) error {
-	cmd := exec.Command(a.command, a.args...)
+	var cmd *exec.Cmd
+	if a.timeout == 0 {
+		cmd = exec.Command(a.command, a.args...)
+	} else {
+		ctx, cancel := context.WithTimeout(context.Background(), a.timeout)
+		defer cancel()
+		cmd = exec.CommandContext(ctx, a.command, a.args...)
+	}
 	cmd.Dir = "/"
 	cmd.Env = mergeEnv(env, a.env)
-	done := make(chan error, 1)
 
-	go func() {
-		if log.Enabled(log.LvDebug) {
-			out, err := cmd.CombinedOutput()
-			log.Debug("action:exec debug", map[string]interface{}{
-				"_output": out,
-			})
-			done <- err
-			return
-		}
-		done <- cmd.Run()
-	}()
-
-	if a.timeout == 0 {
-		return <-done
-	}
-
-	select {
-	case err := <-done:
-		return err
-	case <-time.After(a.timeout):
-		cmd.Process.Kill()
-		log.Warn("action:exec killed", map[string]interface{}{
-			"_command": a.command,
+	if a.debug {
+		out, err := cmd.CombinedOutput()
+		log.Error("action:exec debug", map[string]interface{}{
+			"output": out,
+			"error":  err.Error(),
 		})
-		return <-done
+		return err
 	}
+	return cmd.Run()
 }
 
 func (a *action) Init(name string) error {
@@ -136,12 +127,17 @@ func construct(params map[string]interface{}) (actions.Actor, error) {
 	if err != nil && err != goma.ErrNoKey {
 		return nil, err
 	}
+	debug, err := goma.GetBool("debug", params)
+	if err != nil && err != goma.ErrNoKey {
+		return nil, err
+	}
 
 	return &action{
 		command: command,
 		args:    args,
 		env:     env,
 		timeout: time.Duration(timeout) * time.Second,
+		debug:   debug,
 	}, nil
 }
 

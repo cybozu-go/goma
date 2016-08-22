@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"golang.org/x/net/context"
 )
 
 func handleVersion(w http.ResponseWriter, r *http.Request) {
@@ -13,7 +12,7 @@ func handleVersion(w http.ResponseWriter, r *http.Request) {
 }
 
 // NewRouter creates gorilla/mux *Router for REST API.
-func NewRouter(ctx context.Context) *mux.Router {
+func NewRouter() *mux.Router {
 	r := mux.NewRouter()
 	r.Path("/list").
 		Name("list").
@@ -24,13 +23,13 @@ func NewRouter(ctx context.Context) *mux.Router {
 		Name("register").
 		Methods(http.MethodPost).
 		HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			handleRegister(ctx, w, r)
+			handleRegister(w, r)
 		})
 
 	r.Path("/monitor/{id:[0-9]+}").
 		Name("monitor").
 		HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			handleMonitor(ctx, w, r)
+			handleMonitor(w, r)
 		})
 
 	r.Path("/verbosity").

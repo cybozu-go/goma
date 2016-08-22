@@ -1,6 +1,7 @@
 package exec
 
 import (
+	"context"
 	"os"
 	"os/exec"
 	"sort"
@@ -10,7 +11,6 @@ import (
 	"github.com/cybozu-go/goma"
 	"github.com/cybozu-go/goma/probes"
 	"github.com/cybozu-go/log"
-	"golang.org/x/net/context"
 )
 
 type probe struct {
@@ -21,56 +21,34 @@ type probe struct {
 	env     []string
 }
 
-func (p *probe) createCmd() *exec.Cmd {
-	cmd := exec.Command(p.command, p.args...)
-	cmd.Dir = "/"
+func (p *probe) Probe(ctx context.Context) float64 {
+	cmd := exec.CommandContext(ctx, p.command, p.args...)
 	if p.env != nil {
 		cmd.Env = p.env
 	}
-	return cmd
-}
 
-func (p *probe) Probe(ctx context.Context) float64 {
-	cmd := p.createCmd()
-	ch := make(chan float64, 1)
-
-	go func() {
-		data, err := cmd.Output()
-		if err != nil {
-			if p.parse {
-				ch <- p.errval
-			} else {
-				ch <- 1.0
-			}
-			return
-		}
-
-		if p.parse {
-			f, err := strconv.ParseFloat(strings.TrimSpace(string(data)), 64)
-			if err != nil {
-				ch <- p.errval
-			} else {
-				ch <- f
-			}
-			return
-		}
-
-		ch <- 0
-	}()
-
-	select {
-	case ret := <-ch:
-		return ret
-	case <-ctx.Done():
-		cmd.Process.Kill()
-		log.Warn("probe:exec killed", map[string]interface{}{
-			"_command": p.command,
+	data, err := cmd.Output()
+	if err != nil {
+		log.Error("probe:exec error", map[string]interface{}{
+			"command": p.command,
+			"args":    p.args,
+			"error":   err.Error(),
 		})
 		if p.parse {
 			return p.errval
 		}
 		return 1.0
 	}
+
+	if p.parse {
+		f, err := strconv.ParseFloat(strings.TrimSpace(string(data)), 64)
+		if err != nil {
+			return p.errval
+		}
+		return f
+	}
+
+	return 0
 }
 
 func (p *probe) String() string {

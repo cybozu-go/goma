@@ -1,6 +1,7 @@
 package http
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
@@ -13,7 +14,6 @@ import (
 	"time"
 
 	"github.com/cybozu-go/goma"
-	"golang.org/x/net/context"
 )
 
 const (
@@ -271,7 +271,8 @@ func TestTimeout(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	ctx, _ := context.WithTimeout(context.Background(), 1*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	defer cancel()
 	f := p.Probe(ctx)
 	if !goma.FloatEquals(f, 1.0) {
 		t.Error(`!goma.FloatEquals(f, 1.0)`)

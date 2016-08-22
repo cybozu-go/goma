@@ -1,6 +1,7 @@
 package mysql
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"time"
@@ -10,7 +11,6 @@ import (
 	"github.com/cybozu-go/log"
 	// for driver
 	_ "github.com/go-sql-driver/mysql"
-	"golang.org/x/net/context"
 )
 
 // Obtain connection ID by "SELECT connection_id()",
@@ -36,8 +36,8 @@ func (p *probe) Probe(ctx context.Context) float64 {
 		_, err = p.db.Exec("SET max_execution_time = ?", d.Nanoseconds()/1000000)
 		if err != nil {
 			log.Error("probe:mysql SET max_execution_time", map[string]interface{}{
-				"_dsn": p.dsn,
-				"_err": err.Error(),
+				"dsn":   p.dsn,
+				"error": err.Error(),
 			})
 			return p.errval
 		}
@@ -46,8 +46,8 @@ func (p *probe) Probe(ctx context.Context) float64 {
 	err = p.db.QueryRow("SELECT connection_id()").Scan(&connID)
 	if err != nil {
 		log.Error("probe:mysql SELECT connection_id()", map[string]interface{}{
-			"_dsn": p.dsn,
-			"_err": err.Error(),
+			"dsn":   p.dsn,
+			"error": err.Error(),
 		})
 		return p.errval
 	}
@@ -60,8 +60,8 @@ QUERY:
 		if err != nil {
 			done <- p.errval
 			log.Error("probe:mysql db.QueryRow", map[string]interface{}{
-				"_dsn": p.dsn,
-				"_err": err.Error(),
+				"dsn":   p.dsn,
+				"error": err.Error(),
 			})
 			return
 		}

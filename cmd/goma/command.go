@@ -13,7 +13,6 @@ import (
 
 	"github.com/cybozu-go/goma"
 	"github.com/gorilla/mux"
-	"golang.org/x/net/context"
 )
 
 func newRequest(method, path string, body io.Reader) *http.Request {
@@ -242,7 +241,7 @@ func cmdVerbosity(r *mux.Router, args []string) error {
 }
 
 func runCommand(cmd string, args []string) error {
-	router := goma.NewRouter(context.Background())
+	router := goma.NewRouter()
 
 	commands := map[string]func(r *mux.Router, args []string) error{
 		"list":       cmdList,

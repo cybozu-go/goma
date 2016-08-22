@@ -1,9 +1,12 @@
-![Goma image](goma.png)
+[![GitHub release](https://img.shields.io/github/release/cybozu-go/goma.svg?maxAge=60)][releases]
+[![GoDoc](https://godoc.org/github.com/cybozu-go/goma?status.svg)][godoc]
 [![Build Status](https://travis-ci.org/cybozu-go/goma.svg?branch=master)](https://travis-ci.org/cybozu-go/goma)
+[![Go Report Card](https://goreportcard.com/badge/github.com/cybozu-go/goma)](https://goreportcard.com/report/github.com/cybozu-go/goma)
+[![License](https://img.shields.io/github/license/cybozu-go/goma.svg?maxAge=2592000)](LICENSE)
 
 Goma is:
 
-* Japanese name of sesame seeds, and
+* Japanese name of sesame seeds, ![Goma image](goma.png) and
 * an extensible monitoring agent written in Go, described here.
 
 Abstract
@@ -63,7 +66,7 @@ Read [USAGE.md](USAGE.md) for details.
 Install
 -------
 
-Use Go 1.6 or better.
+Use Go 1.7 or better.
 
 ```
 go get github.com/cybozu-go/goma/cmd/goma
@@ -74,5 +77,7 @@ License
 
 [MIT][]
 
+[releases]: https://github.com/cybozu-go/goma/releases
+[godoc]: https://godoc.org/github.com/cybozu-go/goma
 [DevOps]: https://en.wikipedia.org/wiki/DevOps
 [MIT]: https://opensource.org/licenses/MIT

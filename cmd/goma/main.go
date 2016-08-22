@@ -3,19 +3,15 @@ package main
 import (
 	"flag"
 	"fmt"
-	"net"
 	"os"
-	"os/signal"
 	"strings"
-	"syscall"
 
+	"github.com/cybozu-go/cmd"
 	"github.com/cybozu-go/goma"
 	_ "github.com/cybozu-go/goma/actions/all"
 	_ "github.com/cybozu-go/goma/filters/all"
-	"github.com/cybozu-go/goma/monitor"
 	_ "github.com/cybozu-go/goma/probes/all"
 	"github.com/cybozu-go/log"
-	"golang.org/x/net/context"
 )
 
 const (
@@ -24,11 +20,7 @@ const (
 )
 
 var (
-	confDir = flag.String("d", defaultConfDir, "directory for monitor configs")
-
-	logLevel = flag.String("loglevel", "info", "logging level")
-	logFile  = flag.String("logfile", "", "log filename")
-
+	confDir    = flag.String("d", defaultConfDir, "directory for monitor configs")
 	listenAddr = flag.String("s", defaultListenAddr, "HTTP server address")
 )
 
@@ -58,6 +50,7 @@ Commands:
 func main() {
 	flag.Usage = usage
 	flag.Parse()
+	cmd.LogConfig{}.Apply()
 
 	args := flag.Args()
 
@@ -66,10 +59,10 @@ func main() {
 		return
 	}
 
-	cmd := args[0]
+	command := args[0]
 
-	if cmd != "serve" {
-		err := runCommand(cmd, args[1:])
+	if command != "serve" {
+		err := runCommand(command, args[1:])
 		if err != nil {
 			fmt.Fprintln(os.Stderr, strings.TrimSpace(err.Error()))
 			os.Exit(1)
@@ -77,46 +70,13 @@ func main() {
 		return
 	}
 
-	if err := log.DefaultLogger().SetThresholdByName(*logLevel); err != nil {
+	if err := loadConfigs(*confDir); err != nil {
 		log.ErrorExit(err)
 	}
 
-	if len(*logFile) > 0 {
-		f, err := os.OpenFile(*logFile, os.O_WRONLY|os.O_APPEND, 0644)
-		if err != nil {
-			log.ErrorExit(err)
-		}
-		defer f.Close()
-		log.DefaultLogger().SetOutput(f)
-	}
-
-	ctx, cancel := context.WithCancel(context.Background())
-	done := make(chan error, 1)
-
-	if err := loadConfigs(ctx, *confDir); err != nil {
+	goma.Serve(*listenAddr)
+	err := cmd.Wait()
+	if err != nil && !cmd.IsSignaled(err) {
 		log.ErrorExit(err)
-	}
-
-	l, err := net.Listen("tcp", *listenAddr)
-	if err != nil {
-		log.ErrorExit(err)
-	}
-
-	go func() {
-		done <- goma.Serve(ctx, l)
-	}()
-
-	sig := make(chan os.Signal, 10)
-	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
-	<-sig
-	signal.Stop(sig)
-	cancel()
-	if err := <-done; err != nil {
-		log.Error(err.Error(), nil)
-	}
-
-	// stop all monitors gracefully.
-	for _, m := range monitor.ListMonitors() {
-		m.Stop()
 	}
 }

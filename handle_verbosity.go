@@ -24,7 +24,7 @@ func handleVerbosity(w http.ResponseWriter, r *http.Request) {
 	data, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Error("handleSetVerbosity", map[string]interface{}{
-			"_err": err.Error(),
+			"error": err.Error(),
 		})
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -36,6 +36,6 @@ func handleVerbosity(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Info("new verbosity", map[string]interface{}{
-		"_level": level,
+		"level": level,
 	})
 }

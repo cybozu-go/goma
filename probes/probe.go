@@ -2,10 +2,9 @@
 package probes
 
 import (
+	"context"
 	"errors"
 	"sync"
-
-	"golang.org/x/net/context"
 )
 
 // Prober is the interface for probes.

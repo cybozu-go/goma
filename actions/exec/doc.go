@@ -18,5 +18,6 @@ The constructor takes these parameters:
     env          []string  nil      Environment variables.  See os.Environ.
     timeout      int       0        Timeout seconds for command execution.
                                     Zero disables timeout.
+    debug        bool      false    If true, command outputs are logged on failure.
 */
 package exec
