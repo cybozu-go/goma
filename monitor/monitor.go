@@ -31,9 +31,8 @@ type Monitor struct {
 	failedAt *time.Time
 
 	// goroutine management
-	lock   sync.Mutex
-	cancel context.CancelFunc
-	done   <-chan struct{}
+	lock sync.Mutex
+	env  *cmd.Environment
 }
 
 // NewMonitor creates and initializes a monitor.
@@ -69,16 +68,12 @@ func (m *Monitor) Start() error {
 	m.lock.Lock()
 	defer m.lock.Unlock()
 
-	if m.done != nil {
+	if m.env != nil {
 		return ErrStarted
 	}
 
-	done := make(chan struct{})
-	m.done = done
-	ctx, cancel := context.WithCancel(cmd.Context())
-	m.cancel = cancel
-
-	go run(ctx, m, done)
+	m.env = cmd.NewEnvironment(context.Background())
+	m.env.Go(m.run)
 
 	log.Info("monitor started", map[string]interface{}{
 		"monitor": m.name,
@@ -92,7 +87,7 @@ func (m *Monitor) Stop() {
 	m.lock.Lock()
 	defer m.lock.Unlock()
 
-	if m.done == nil {
+	if m.env == nil {
 		return
 	}
 
@@ -100,10 +95,9 @@ func (m *Monitor) Stop() {
 		"monitor": m.name,
 	})
 
-	m.cancel()
-
-	<-m.done
-	m.done = nil
+	m.env.Cancel(nil)
+	m.env.Wait()
+	m.env = nil
 
 	m.failedAt = nil
 
@@ -116,7 +110,7 @@ func (m *Monitor) die() {
 	m.lock.Lock()
 	defer m.lock.Unlock()
 
-	m.done = nil
+	m.env = nil
 }
 
 func callProbe(ctx context.Context, p probes.Prober, timeout time.Duration) float64 {
@@ -125,7 +119,7 @@ func callProbe(ctx context.Context, p probes.Prober, timeout time.Duration) floa
 	return p.Probe(ctx)
 }
 
-func run(ctx context.Context, m *Monitor, done chan<- struct{}) {
+func (m *Monitor) run(ctx context.Context) error {
 	if m.filter != nil {
 		m.filter.Init()
 	}
@@ -136,9 +130,8 @@ func run(ctx context.Context, m *Monitor, done chan<- struct{}) {
 				"monitor": m.name,
 				"action":  a.String(),
 			})
-			close(done)
 			m.die()
-			return
+			return err
 		}
 	}
 
@@ -152,8 +145,7 @@ func run(ctx context.Context, m *Monitor, done chan<- struct{}) {
 		// check cancel
 		select {
 		case <-ctx.Done():
-			done <- struct{}{}
-			return
+			return nil
 		default:
 			// not canceled
 		}
@@ -200,8 +192,7 @@ func run(ctx context.Context, m *Monitor, done chan<- struct{}) {
 
 		select {
 		case <-ctx.Done():
-			done <- struct{}{}
-			return
+			return nil
 		case <-t:
 			// interval timer expires
 		}
@@ -235,5 +226,5 @@ func (m *Monitor) Running() bool {
 	m.lock.Lock()
 	defer m.lock.Unlock()
 
-	return m.done != nil
+	return m.env != nil
 }

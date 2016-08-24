@@ -10,6 +10,7 @@ import (
 	"github.com/cybozu-go/goma"
 	_ "github.com/cybozu-go/goma/actions/all"
 	_ "github.com/cybozu-go/goma/filters/all"
+	"github.com/cybozu-go/goma/monitor"
 	_ "github.com/cybozu-go/goma/probes/all"
 	"github.com/cybozu-go/log"
 )
@@ -78,5 +79,10 @@ func main() {
 	err := cmd.Wait()
 	if err != nil && !cmd.IsSignaled(err) {
 		log.ErrorExit(err)
+	}
+
+	// stop all monitors gracefully.
+	for _, m := range monitor.ListMonitors() {
+		m.Stop()
 	}
 }
