@@ -12,9 +12,8 @@ Table of contents:
 * [Security](#security)
 * [REST API](#api)
 
-<a name="agent" />
-Running goma agent
-------------------
+<a name="agent" />Running goma agent
+------------------------------------
 
 `goma serve` starts monitoring agent (server).  
 `goma` does not provide so-called *daemon* mode.
@@ -24,9 +23,8 @@ At startup, `goma` will load [TOML][] configuration files from a
 directory (default is `/usr/local/etc/goma`).  Each file can define
 multiple monitors as described below.
 
-<a name="client" />
-Client commands
----------------
+<a name="client" />Client commands
+----------------------------------
 
 `goma` works as clients for commands other than "serve".
 
@@ -68,9 +66,8 @@ Use `-s` option to change the address.
 
     `goma verbosity` queries the current logging threshold.
 
-<a name="define" />
-Defining monitors
------------------
+<a name="define" />Defining monitors
+------------------------------------
 
 Monitors can be defined in a TOML file like this:
 
@@ -108,9 +105,8 @@ max = 0.3
 
 See [annotated sample file](sample.toml).
 
-<a name="probes" />
-Probes
-------
+<a name="probes" />Probes
+-------------------------
 
 See GoDoc for construction parameters:
 
@@ -118,17 +114,15 @@ See GoDoc for construction parameters:
 * [http](https://godoc.org/github.com/cybozu-go/goma/probes/http)
 * [mysql](https://godoc.org/github.com/cybozu-go/goma/probes/mysql)
 
-<a name="filters" />
-Filters
--------
+<a name="filters" />Filters
+---------------------------
 
 See GoDoc for construction parameters:
 
 * [average](https://godoc.org/github.com/cybozu-go/goma/filters/average)
 
-<a name="actions" />
-Actions
--------
+<a name="actions" />Actions
+---------------------------
 
 See GoDoc for construction parameters:
 
@@ -136,9 +130,8 @@ See GoDoc for construction parameters:
 * [http](https://godoc.org/github.com/cybozu-go/goma/actions/http)
 * [mail](https://godoc.org/github.com/cybozu-go/goma/actions/mail)
 
-<a name="security" />
-Security
---------
+<a name="security" />Security
+-----------------------------
 
 Care must be taken on which address and user will goma run.
 
@@ -155,9 +148,8 @@ Strongly recommended is to create a user solely for goma, and run goma
 as that user.  To escalate privileges for some probes, `sudo` with
 properly configured `/etc/sudoers` can be used.
 
-<a name="api" />
-REST API
---------
+<a name="api" />REST API
+------------------------
 
 ### /list
 
