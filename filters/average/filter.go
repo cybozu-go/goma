@@ -50,9 +50,9 @@ func construct(params map[string]interface{}) (filters.Filter, error) {
 		}
 	}
 
-	var window = defaultWindowSize
+	var window int64 = defaultWindowSize
 	if v, ok := params["window"]; ok {
-		window, ok = v.(int)
+		window, ok = v.(int64)
 		if !ok {
 			return nil, fmt.Errorf("window is not an integer: %v", v)
 		}
