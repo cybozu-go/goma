@@ -6,11 +6,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/cybozu-go/cmd"
 	"github.com/cybozu-go/goma/actions"
 	"github.com/cybozu-go/goma/filters"
 	"github.com/cybozu-go/goma/probes"
 	"github.com/cybozu-go/log"
+	"github.com/cybozu-go/well"
 )
 
 // Monitor is a unit of monitoring.
@@ -32,7 +32,7 @@ type Monitor struct {
 
 	// goroutine management
 	lock sync.Mutex
-	env  *cmd.Environment
+	env  *well.Environment
 }
 
 // NewMonitor creates and initializes a monitor.
@@ -72,7 +72,7 @@ func (m *Monitor) Start() error {
 		return ErrStarted
 	}
 
-	m.env = cmd.NewEnvironment(context.Background())
+	m.env = well.NewEnvironment(context.Background())
 	m.env.Go(m.run)
 
 	log.Info("monitor started", map[string]interface{}{

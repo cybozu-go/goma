@@ -1,6 +1,6 @@
 [![GitHub release](https://img.shields.io/github/release/cybozu-go/goma.svg?maxAge=60)][releases]
 [![GoDoc](https://godoc.org/github.com/cybozu-go/goma?status.svg)][godoc]
-[![Build Status](https://travis-ci.org/cybozu-go/goma.svg?branch=master)](https://travis-ci.org/cybozu-go/goma)
+[![CircleCI](https://circleci.com/gh/cybozu-go/goma.svg?style=svg)](https://circleci.com/gh/cybozu-go/goma)
 [![Go Report Card](https://goreportcard.com/badge/github.com/cybozu-go/goma)](https://goreportcard.com/report/github.com/cybozu-go/goma)
 [![License](https://img.shields.io/github/license/cybozu-go/goma.svg?maxAge=2592000)](LICENSE)
 
