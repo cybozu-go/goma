@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/cybozu-go/cmd"
+	"github.com/cybozu-go/well"
 )
 
 const (
@@ -20,7 +20,7 @@ const (
 
 // Serve runs REST API server until the global environment is canceled.
 func Serve(addr string) error {
-	s := &cmd.HTTPServer{
+	s := &well.HTTPServer{
 		Server: &http.Server{
 			Addr:         addr,
 			Handler:      NewRouter(),

@@ -6,13 +6,13 @@ import (
 	"os"
 	"strings"
 
-	"github.com/cybozu-go/cmd"
 	"github.com/cybozu-go/goma"
 	_ "github.com/cybozu-go/goma/actions/all"
 	_ "github.com/cybozu-go/goma/filters/all"
 	"github.com/cybozu-go/goma/monitor"
 	_ "github.com/cybozu-go/goma/probes/all"
 	"github.com/cybozu-go/log"
+	"github.com/cybozu-go/well"
 )
 
 const (
@@ -51,7 +51,7 @@ Commands:
 func main() {
 	flag.Usage = usage
 	flag.Parse()
-	cmd.LogConfig{}.Apply()
+	well.LogConfig{}.Apply()
 
 	args := flag.Args()
 
@@ -76,8 +76,8 @@ func main() {
 	}
 
 	goma.Serve(*listenAddr)
-	err := cmd.Wait()
-	if err != nil && !cmd.IsSignaled(err) {
+	err := well.Wait()
+	if err != nil && !well.IsSignaled(err) {
 		log.ErrorExit(err)
 	}
 
