@@ -32,7 +32,7 @@ func TestWindow(t *testing.T) {
 	}
 
 	f, err := construct(map[string]interface{}{
-		"window": 20,
+		"window": int64(20),
 	})
 	if err != nil {
 		t.Fatal(err)
