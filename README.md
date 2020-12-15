@@ -65,7 +65,7 @@ Read [USAGE.md](USAGE.md) for details.
 Install
 -------
 
-Use Go 1.7 or better.
+The latest officially supported Go version is recommended.
 
 ```
 go get github.com/cybozu-go/goma/cmd/goma

@@ -1,5 +1,7 @@
 module github.com/cybozu-go/goma
 
+go 1.15
+
 require (
 	github.com/BurntSushi/toml v0.3.1
 	github.com/cybozu-go/log v1.5.0
