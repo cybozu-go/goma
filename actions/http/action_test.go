@@ -1,6 +1,8 @@
 package http
 
 import (
+	"context"
+	"errors"
 	"flag"
 	"fmt"
 	"log"
@@ -272,11 +274,7 @@ func TestTimeout(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// When request is canceled, net/http returns an unexported error
-	// (errRequestCanceled = errors.New("net/http: request canceled").
-	//
-	// To test cancelation, only we can do here is to test err != nil.
-	if err := a.Init("monitor1"); err == nil {
-		t.Error(`err := a.Init("monitor1"); err == nil`)
+	if err := a.Init("monitor1"); !errors.Is(err, context.DeadlineExceeded) {
+		t.Errorf("expected %v, got %v", context.DeadlineExceeded, err)
 	}
 }
