@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-    - image: quay.io/cybozu/golang:1.15-focal
+    - image: ghcr.io/cybozu/golang:1.20-jammy
     working_directory: /work
     steps:
     - checkout
