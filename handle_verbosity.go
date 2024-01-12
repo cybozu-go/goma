@@ -1,7 +1,7 @@
 package goma
 
 import (
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 
@@ -21,7 +21,7 @@ func handleVerbosity(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// for PUT or POST, set new verbosity.
-	data, err := ioutil.ReadAll(r.Body)
+	data, err := io.ReadAll(r.Body)
 	if err != nil {
 		log.Error("handleSetVerbosity", map[string]interface{}{
 			"error": err.Error(),

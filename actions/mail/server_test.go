@@ -5,7 +5,7 @@
 package mail
 
 import (
-	"io/ioutil"
+	"io"
 	"net"
 	"net/textproto"
 	"regexp"
@@ -179,7 +179,7 @@ func (s *server) process(c net.Conn) {
 			if reply(354, "End data with <CR><LF>.<CR><LF>", false) != nil {
 				return
 			}
-			t, err := ioutil.ReadAll(tc.Reader.DotReader())
+			t, err := io.ReadAll(tc.Reader.DotReader())
 			if err != nil {
 				return
 			}

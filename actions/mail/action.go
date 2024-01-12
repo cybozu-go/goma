@@ -3,7 +3,7 @@ package mail
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net"
 	"net/mail"
 	"os"
@@ -208,7 +208,7 @@ func construct(params map[string]interface{}) (actions.Actor, error) {
 		if err != nil {
 			return nil, err
 		}
-		if err := tpl.Execute(ioutil.Discard, &tplParams{}); err != nil {
+		if err := tpl.Execute(io.Discard, &tplParams{}); err != nil {
 			return nil, err
 		}
 		subject = tpl
@@ -225,7 +225,7 @@ func construct(params map[string]interface{}) (actions.Actor, error) {
 		if err != nil {
 			return nil, err
 		}
-		if err := tpl.Execute(ioutil.Discard, &tplParams{}); err != nil {
+		if err := tpl.Execute(io.Discard, &tplParams{}); err != nil {
 			return nil, err
 		}
 		body = tpl

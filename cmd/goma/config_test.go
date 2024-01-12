@@ -1,7 +1,6 @@
 package main
 
 import (
-	"io/ioutil"
 	"os"
 	"testing"
 )
@@ -13,7 +12,7 @@ window = 2
 `
 
 func writeToTempFile(content string) (string, error) {
-	tmpFile, err := ioutil.TempFile("", "")
+	tmpFile, err := os.CreateTemp("", "")
 	if err != nil {
 		return "", err
 	}

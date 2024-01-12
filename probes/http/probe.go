@@ -2,7 +2,7 @@ package http
 
 import (
 	"context"
-	"io/ioutil"
+	"io"
 	"net"
 	"net/http"
 	"net/url"
@@ -53,7 +53,7 @@ func (p *probe) Probe(ctx context.Context) float64 {
 	}
 	defer resp.Body.Close()
 
-	data, err := ioutil.ReadAll(resp.Body)
+	data, err := io.ReadAll(resp.Body)
 	if err != nil {
 		if p.parse {
 			return p.errval

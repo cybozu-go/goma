@@ -12,14 +12,14 @@ Basic authentication can be used by embedding user:password in url.
 
 The constructor takes these parameters:
 
-    Name       Type     Default   Description
-    url        string             URL to test HTTP server.
-    method     string   GET       Method to use.
-    agent      string   goma/0.1  User-Agent string.
-    proxy      string             URL for proxy server.  Optional.
-    header     map[string]string  HTTP headers.  Optional.
-    parse      bool     false     See the above description.
-    errval     float64  0         When parse is true and command failed,
-                                  this value is returned as the probe value.
+	Name       Type     Default   Description
+	url        string             URL to test HTTP server.
+	method     string   GET       Method to use.
+	agent      string   goma/0.1  User-Agent string.
+	proxy      string             URL for proxy server.  Optional.
+	header     map[string]string  HTTP headers.  Optional.
+	parse      bool     false     See the above description.
+	errval     float64  0         When parse is true and command failed,
+	                              this value is returned as the probe value.
 */
 package http

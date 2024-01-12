@@ -1,3 +1,6 @@
+Goma
+====
+
 [![GitHub release](https://img.shields.io/github/release/cybozu-go/goma.svg?maxAge=60)][releases]
 [![GoDoc](https://godoc.org/github.com/cybozu-go/goma?status.svg)][godoc]
 [![CircleCI](https://circleci.com/gh/cybozu-go/goma.svg?style=svg)](https://circleci.com/gh/cybozu-go/goma)
@@ -68,7 +71,7 @@ Install
 The latest officially supported Go version is recommended.
 
 ```
-go get github.com/cybozu-go/goma/cmd/goma
+go install github.com/cybozu-go/goma/cmd/goma@latest
 ```
 
 License
