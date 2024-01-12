@@ -1,3 +1,4 @@
+//go:build !nacl && !plan9 && !windows
 // +build !nacl,!plan9,!windows
 
 package exec

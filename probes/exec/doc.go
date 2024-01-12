@@ -9,12 +9,12 @@ as a floating point number, and will be used as the probe value.
 
 The constructor takes these parameters:
 
-    Name       Type      Default   Description
-    command    string              The command to run.
-    args       []string      nil   Command arguments.
-    parse      bool        false   See the above description.
-    errval     float64         0   When parse is true and command failed,
-                                   this value is returned as the probe value.
-    env        []string      nil   Environment variables.  See os.Environ.
+	Name       Type      Default   Description
+	command    string              The command to run.
+	args       []string      nil   Command arguments.
+	parse      bool        false   See the above description.
+	errval     float64         0   When parse is true and command failed,
+	                               this value is returned as the probe value.
+	env        []string      nil   Environment variables.  See os.Environ.
 */
 package exec

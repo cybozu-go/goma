@@ -8,10 +8,10 @@ The SELECT statement should return a floating point value.
 
 The constructor takes these parameters:
 
-    Name       Type     Default   Description
-    dsn        string             DSN for MySQL server.  Required.
-    query      string             SELECT statement.  Required.
-    errval     float64  0         Return value upon an error.
+	Name       Type     Default   Description
+	dsn        string             DSN for MySQL server.  Required.
+	query      string             SELECT statement.  Required.
+	errval     float64  0         Return value upon an error.
 
 This probe utilizes max_execution_time system variable if available
 (for MySQL 5.7.8+).  If not, the probe will kill the running thread
