@@ -3,7 +3,7 @@ package mail
 import (
 	"bytes"
 	"flag"
-	"io/ioutil"
+	"io"
 	"log"
 	"net"
 	"net/mail"
@@ -219,7 +219,7 @@ func TestInitMail(t *testing.T) {
 	if !strings.Contains(msg.Header.Get("Subject"), "monitor1") {
 		t.Error(`!strings.Contains(msg.Header.Get("Subject"), "monitor1")`)
 	}
-	body, err := ioutil.ReadAll(msg.Body)
+	body, err := io.ReadAll(msg.Body)
 	if err != nil {
 		t.Error(err)
 	}
@@ -263,7 +263,7 @@ func TestFailMail(t *testing.T) {
 	if len(al) != 1 {
 		t.Error(`len(al) != 1`)
 	}
-	body, err := ioutil.ReadAll(msg.Body)
+	body, err := io.ReadAll(msg.Body)
 	if err != nil {
 		t.Error(err)
 	}
@@ -314,7 +314,7 @@ func TestRecoverMail(t *testing.T) {
 	if len(al) != 2 {
 		t.Error(`len(al) != 2`)
 	}
-	body, err := ioutil.ReadAll(msg.Body)
+	body, err := io.ReadAll(msg.Body)
 	if err != nil {
 		t.Error(err)
 	}
@@ -437,7 +437,7 @@ func TestBody(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	body, err := ioutil.ReadAll(msg.Body)
+	body, err := io.ReadAll(msg.Body)
 	if err != nil {
 		t.Error(err)
 	}

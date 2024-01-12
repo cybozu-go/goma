@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
@@ -36,7 +35,7 @@ type action struct {
 
 func processResponse(u *url.URL, resp *http.Response) error {
 	defer func() {
-		io.Copy(ioutil.Discard, resp.Body)
+		io.Copy(io.Discard, resp.Body)
 		resp.Body.Close()
 	}()
 
@@ -75,7 +74,7 @@ func (a *action) request(u *url.URL, params map[string]string) error {
 	} else {
 		header.Set("Content-Type", "application/x-www-form-urlencoded")
 		length = int64(len(data))
-		body = ioutil.NopCloser(strings.NewReader(data))
+		body = io.NopCloser(strings.NewReader(data))
 	}
 	req := &http.Request{
 		Method:        a.method,
